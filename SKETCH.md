@@ -68,8 +68,10 @@ API:
         Error: any one by random
 ```
 ### Server cycle:
+```
 1. db init
 2. listen and serve
    1. /create
    2.
 3. responce
+```
