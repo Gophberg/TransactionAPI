@@ -1,0 +1,4 @@
+jwttoken: mysupersecrettoken
+dbusername: postres
+dbpassword: postres
+dockerdbport: 5432
