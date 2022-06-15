@@ -34,7 +34,7 @@ UserByREST:
         api.TransactionCancel(*user)
 
 API:
-    transactionCreate(*transaction) status {
+    TransactionCreate(*transaction) status {
         db.Status = new
         Status = lock()
         ExtPaySys.Auth(jwt)
