@@ -11,7 +11,7 @@ Currency  string
 TransactionID integer
 UserID        integer
 UserEmail     text
-Amount        float
+Amount        decimal.Decimal (or int+int)
 Currency      text 
 CreationDate  date
 UpdateDate    date  
