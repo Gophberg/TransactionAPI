@@ -1,28 +1,23 @@
 # TransactionAPI
-#### External DB:
+#### User struct:
 ```
-User:
-    ID      integer
-    e-mail  text
+UserID    string
+UserEmail string
+Amount    int
+Currency  string
 ```
-#### Internal DB:
-```
-States:
-    Save    boolean
-    Update  boolean
-```
-#### Transactions:
+#### Transaction struct:
 ```
 TransactionID integer
 UserID        integer
 UserEmail     text
 Amount        float
-Currency      integer (need to redefinition or use type text) 
+Currency      text 
 CreationDate  date
 UpdateDate    date  
-Status        integer (need to redefinition or use type text)
+Status        text
 ```
-#### Transactions Statuses:
+#### Status struct:
 ```
 New
 Success
@@ -30,48 +25,54 @@ Failure
 Error
 Canceled
 ```
-### API functions:
+### Cycle:
 ```
-Transaction:
-    Create:
-        {
-            UserID,
-            UserEmail,
-            Amount,
-            Currency
-        }
+UserByREST:
+    /user
+        api.TransactionCreate(*user)
+        api.TransactionStatus(*user)
+        api.TransactionCancel(*user)
 
-    Status:
-        Update
-    Check by TransactionID
-    SELECT * FROM Transactions WHERE UserID = "some id"
-    SELECT * FROM Transactions WHERE UserID = "some id"
-    Cancel transaction for an UserID
-        Error if impossible (if status is success/failure, i.e. locked)
-```
-### Transaction Cycle:
-```
-User:
-    Create:
-        Status := New
-        Create:
-            {
-                UserID,
-                UserEmail,
-                Amount,
-                Currency
-            }
 API:
-    Status: Lock
-        Success/Failure: random
-    To DB: state record
-        Error: any one by random
-```
-### Server cycle:
-```
-1. db init
-2. listen and serve
-   1. /create
-   2.
-3. responce
+    transactionCreate(*transaction) status {
+        db.Status = new
+        Status = lock()
+        ExtPaySys.Auth(jwt)
+        ExtPaySys.TransactionRequest(*user) {
+            if ExtPaySys.Status = success || failure {
+                Status := "locked"
+                db.Update(status)
+                return "status"
+            }
+            ulse {
+                db.Update(status)
+                return "status"
+            }
+        }
+    }
+    TransactionStatus(*transaction) status {
+        return ExtPaySys.CheckStatus(*user.Id)
+    }
+    db.SelectById(*user.Id) []transactions
+    db.SelectByEmail(*user.Email) []transactions
+    TransactionCancel(*user)
+        if Status = locked {
+            return "impossible"
+        }
+        ExtPaySys.TransactionCancel(*transaction.Id) 
+            Error if impossible (if status is success/failure, i.e. locked)
+
+ExtPaySys:
+    Auth(jwt)
+    TransactionRequest(*transactionExtPaySys) {
+        defer time.Sleep(10 * time.Second)
+        if TransactionCancel {
+            // canceling()
+            return "canceled"
+        }
+        return "success" || "failure"
+    }
+    CheckStatus(*transactionExtPaySys) {
+        return "status"
+    }
 ```
