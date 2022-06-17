@@ -1,5 +1,12 @@
 package TransactionAPI
 
+type Config struct {
+	Jwttoken     string `yaml:"jwttoken"`
+	Dbusername   string `yaml:"dbusername"`
+	Dbpassword   string `yaml:"dbpassword"`
+	Dockerdbport string `yaml:"dockerdbport"`
+}
+
 type User struct {
 	Id    int    `json:"id"`
 	Email string `json:"email"`
