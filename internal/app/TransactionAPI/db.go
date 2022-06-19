@@ -6,27 +6,21 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type DbServerInterface interface {
-	CheckStatusById(Config, int) (string, error)
-	GetAllPaymentsByUserId(Config, int) ([]Transaction, error)
-	CreatePayment(transaction Transaction) error
-}
-
-func ConnDB(config Config) (*sql.DB, error) {
-	dataSourceName := fmt.Sprintf("host=%v user=%v password='%v' dbname=transactions sslmode=disable", config.DatabaseHost, config.Dbusername, config.Dbpassword)
-	db, err := sql.Open("postgres", dataSourceName)
+func ConnDB() (*sql.DB, error) {
+	db, err := sql.Open("postgres", "host=localhost user=postgres password='postgres' dbname=transactions sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
 	return db, err
 }
 
-type TransactionsRepository struct {
-	db *sql.DB
+type DbServerInterface interface {
+	CheckStatusById(int) (string, error)
+	GetAllPaymentsByUserId(int) ([]Transaction, error)
 }
 
-func (t Transaction) CheckStatusById(config Config, id int) (string, error) {
-	db, err := ConnDB(config)
+func (t Transaction) CheckStatusById(id int) (string, error) {
+	db, err := ConnDB()
 	if err != nil {
 		return "", err
 	}
@@ -40,9 +34,9 @@ func (t Transaction) CheckStatusById(config Config, id int) (string, error) {
 	return t.Status, nil
 }
 
-func (t Transaction) GetAllPaymentsByUserId(config Config, id int) ([]Transaction, error) {
+func (t Transaction) GetAllPaymentsByUserId(id int) ([]Transaction, error) {
 	var items []Transaction
-	db, err := ConnDB(config)
+	db, err := ConnDB()
 	if err != nil {
 		return nil, err
 	}
@@ -70,18 +64,3 @@ func (t Transaction) GetAllPaymentsByUserId(config Config, id int) ([]Transactio
 	}
 	return items, nil
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-//func (t TransactionsRepository) CreatePayment(transaction Transaction) error {
-//	t.db, err := ConnDB()
-//	if err != nil {
-//		return err
-//	}
-//	tr := Transaction{
-//		UserID: 4,
-//
-//	}
-//	defer t.db.Close()
-//	return t.db.QueryRow(`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) VALUES (tr.UserId, tr.User, 321.11, 'USD', TIMESTAMP '2022-06-19 21:00:06', TIMESTAMP '2022-06-19 21:00:07', 'Success'`).Scan(t.Id)
-//}
