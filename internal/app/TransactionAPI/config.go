@@ -13,7 +13,7 @@ func NewConfig() *Config {
 	defer func(f *os.File) {
 		err := f.Close()
 		if err != nil {
-
+			log.Fatal(err)
 		}
 	}(f)
 	flds, err := ioutil.ReadAll(f)

@@ -1,5 +1,9 @@
 package TransactionAPI
 
+import (
+	"github.com/shopspring/decimal"
+)
+
 type Config struct {
 	Jwttoken     string `yaml:"jwttoken"`
 	Dbusername   string `yaml:"dbusername"`
@@ -13,14 +17,14 @@ type User struct {
 }
 
 type Transaction struct {
-	Id        int
-	UserID    int
-	UserEmail string
-	//Amount       decimal.Decimal
-	Currency     string
-	CreationDate int64
-	UpdateDate   int64
-	Status       Status
+	Id           int             `json:"id"`
+	UserID       int             `json:"userid"`
+	UserEmail    string          `json:"useremail"`
+	Amount       decimal.Decimal `json:"amount"`
+	Currency     string          `json:"currency"`
+	CreationDate int64           `json:"datecreated"`
+	UpdateDate   int64           `json:"dateupdated"`
+	Status       string          `json:"status"`
 }
 
 type Status struct {
