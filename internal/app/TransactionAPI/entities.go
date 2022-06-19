@@ -8,6 +8,7 @@ type Config struct {
 	Jwttoken     string `yaml:"jwttoken"`
 	Dbusername   string `yaml:"dbusername"`
 	Dbpassword   string `yaml:"dbpassword"`
+	DatabaseHost string `yaml:"databasehost"`
 	Dockerdbport string `yaml:"dockerdbport"`
 }
 

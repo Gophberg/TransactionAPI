@@ -21,5 +21,8 @@ func Start(config *Config) error {
 		log.Println(err)
 	}
 	fmt.Println(allPaymentsByUserId)
+
+	//DBServer.CreatePayment()
+	
 	return nil
 }
