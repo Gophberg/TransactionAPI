@@ -22,8 +22,8 @@ type Transaction struct {
 	UserEmail    string          `json:"useremail"`
 	Amount       decimal.Decimal `json:"amount"`
 	Currency     string          `json:"currency"`
-	CreationDate int64           `json:"datecreated"`
-	UpdateDate   int64           `json:"dateupdated"`
+	CreationDate string          `json:"datecreated"`
+	UpdateDate   string          `json:"dateupdated"`
 	Status       string          `json:"status"`
 }
 
