@@ -1,0 +1,21 @@
+ ☐ TransactionAPI
+   ☐ REST side
+     ☐ endpoints
+     ☐ tests
+   ☐ DB side
+     ☐ CRUDs
+       ☐ Create
+       ✔ Find status by payment id @done (22-06-20 12:33)
+       ✔ Find all by UserID @done (22-06-20 12:33)
+       ☐ Find all by UserEmail
+       ☐ Cancel payment
+     ☐ tests
+   ☐ PaySys side
+     ☐ Authorization
+   ☐ Other
+     ✔ docker @done (22-06-20 12:31)
+     ✔ config @done (22-06-20 12:31)
+     ✔ migrations @done (22-06-20 12:31)
+     ✔ Makefile @done (22-06-20 12:31)
+     ☐ Documentation
+
