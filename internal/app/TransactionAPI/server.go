@@ -8,44 +8,20 @@ import (
 	"strings"
 )
 
-func Start(config *Config) error {
-	var DBServer DbServerInterface
-	transactionImplementation := Transaction{
-		UserID: 1,
-	}
-	DBServer = transactionImplementation
-	transactionstatus, err := DBServer.CheckStatusById(1)
-	if err != nil {
-		log.Println(err)
-	}
-	fmt.Println(transactionstatus)
-	allPaymentsByUserId, err := DBServer.GetAllPaymentsByUserId(1)
-	if err != nil {
-		log.Println(err)
-	}
-	fmt.Println(allPaymentsByUserId)
+var DBServer DBQuerier
 
-	// http server
-
-	http.HandleFunc("/getStatus", getStatusById)
-
-	return http.ListenAndServe(":9000", nil)
-
-	//return nil
+type RestServer interface {
+	getStatusById(http.ResponseWriter, *http.Request)
 }
 
-func getStatusById(w http.ResponseWriter, req *http.Request) {
+func (t Transaction) getStatusById(w http.ResponseWriter, req *http.Request) {
 	splitRoute := strings.Split(req.URL.String(), "?id=")
 	id, err := strconv.Atoi(splitRoute[1])
 	if err != nil {
 		log.Println(err)
 	}
 	fmt.Printf("Value of id: %d\n", id)
-	var DBServer DbServerInterface
-	transactionImplenemtation := Transaction{
-		UserID: id,
-	}
-	DBServer = transactionImplenemtation
+	DBServer = t
 	status, err := DBServer.CheckStatusById(id)
 	if err != nil {
 		log.Println(err)
@@ -55,4 +31,20 @@ func getStatusById(w http.ResponseWriter, req *http.Request) {
 		log.Println(err)
 	}
 	fmt.Println(b)
+}
+
+func Start(config *Config) error {
+	//DBServer = t
+	//allPaymentsByUserId, err := DBServer.GetAllPaymentsByUserId(1)
+	//if err != nil {
+	//	log.Println(err)
+	//}
+	//fmt.Println(allPaymentsByUserId)
+
+	// http server
+	var rustServer RestServer
+	var DBServer = Transaction{}
+	rustServer = DBServer
+	http.HandleFunc("/getStatus", rustServer.getStatusById)
+	return http.ListenAndServe(":9000", nil)
 }

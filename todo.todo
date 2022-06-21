@@ -1,6 +1,10 @@
  ☐ TransactionAPI
    ☐ REST side
      ☐ endpoints
+       ☐ get status by user id
+       ☐ get all transactions by user id
+       ☐ get all transactions by user email
+       ☐ cancel transaction
      ☐ tests
    ☐ DB side
      ☐ CRUDs

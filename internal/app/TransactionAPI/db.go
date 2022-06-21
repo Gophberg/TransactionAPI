@@ -14,7 +14,7 @@ func ConnDB() (*sql.DB, error) {
 	return db, err
 }
 
-type DbServerInterface interface {
+type DBQuerier interface {
 	CheckStatusById(int) (string, error)
 	GetAllPaymentsByUserId(int) ([]Transaction, error)
 }
