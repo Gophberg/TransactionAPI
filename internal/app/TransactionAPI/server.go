@@ -10,19 +10,15 @@ import (
 
 var DBServer DBQuerier
 
-type RestServer interface {
-	getStatusById(http.ResponseWriter, *http.Request)
-}
-
-func (t Transaction) getStatusById(w http.ResponseWriter, req *http.Request) {
-	splitRoute := strings.Split(req.URL.String(), "?id=")
+func (t Transaction) getStatusById(w http.ResponseWriter, r *http.Request) {
+	splitRoute := strings.Split(r.URL.String(), "?id=")
 	id, err := strconv.Atoi(splitRoute[1])
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Printf("Value of id: %d\n", id)
+	fmt.Printf("Requested status of transaction id: %d\n", id)
 	DBServer = t
-	status, err := DBServer.CheckStatusById(id)
+	status, err := DBServer.GetTransactionStatusById(id)
 	if err != nil {
 		log.Println(err)
 	}
@@ -33,18 +29,30 @@ func (t Transaction) getStatusById(w http.ResponseWriter, req *http.Request) {
 	fmt.Println(b)
 }
 
-func Start(config *Config) error {
-	//DBServer = t
-	//allPaymentsByUserId, err := DBServer.GetAllPaymentsByUserId(1)
-	//if err != nil {
-	//	log.Println(err)
-	//}
-	//fmt.Println(allPaymentsByUserId)
+func (t Transaction) getAllTransactionsByUserId(w http.ResponseWriter, r *http.Request) {
+	splitRoute := strings.Split(r.URL.String(), "?id=")
+	id, err := strconv.Atoi(splitRoute[1])
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Printf("Requested all transactions of UserId: %d\n", id)
+	DBServer = t
+	allTransactionsByUserId, err := DBServer.GetAllTransactionsByUserId(id)
+	if err != nil {
+		log.Println(err)
+	}
+	b, err := fmt.Fprint(w, allTransactionsByUserId)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(b)
+}
 
-	// http server
+func Start(config *Config) error {
 	var rustServer RestServer
 	var DBServer = Transaction{}
 	rustServer = DBServer
 	http.HandleFunc("/getStatus", rustServer.getStatusById)
+	http.HandleFunc("/getAllTransactionsByUserId", rustServer.getAllTransactionsByUserId)
 	return http.ListenAndServe(":9000", nil)
 }

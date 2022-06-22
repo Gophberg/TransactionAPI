@@ -2,6 +2,7 @@ package TransactionAPI
 
 import (
 	"github.com/shopspring/decimal"
+	"net/http"
 )
 
 type Config struct {
@@ -33,4 +34,14 @@ type Status struct {
 	Failure  string `json:"failure"`
 	Error    string `json:"error"`
 	Canceled string `json:"canceled"`
+}
+
+type DBQuerier interface {
+	GetTransactionStatusById(int) (string, error)
+	GetAllTransactionsByUserId(int) ([]Transaction, error)
+}
+
+type RestServer interface {
+	getStatusById(http.ResponseWriter, *http.Request)
+	getAllTransactionsByUserId(http.ResponseWriter, *http.Request)
 }

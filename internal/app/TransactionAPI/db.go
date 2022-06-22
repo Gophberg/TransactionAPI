@@ -14,12 +14,7 @@ func ConnDB() (*sql.DB, error) {
 	return db, err
 }
 
-type DBQuerier interface {
-	CheckStatusById(int) (string, error)
-	GetAllPaymentsByUserId(int) ([]Transaction, error)
-}
-
-func (t Transaction) CheckStatusById(id int) (string, error) {
+func (t Transaction) GetTransactionStatusById(id int) (string, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return "", err
@@ -34,7 +29,7 @@ func (t Transaction) CheckStatusById(id int) (string, error) {
 	return t.Status, nil
 }
 
-func (t Transaction) GetAllPaymentsByUserId(id int) ([]Transaction, error) {
+func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
 	var items []Transaction
 	db, err := ConnDB()
 	if err != nil {
