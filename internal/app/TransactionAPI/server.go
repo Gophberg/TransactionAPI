@@ -48,11 +48,28 @@ func (t Transaction) getAllTransactionsByUserId(w http.ResponseWriter, r *http.R
 	fmt.Println(b)
 }
 
+func (t Transaction) getAllTransactionsByUserEmail(w http.ResponseWriter, r *http.Request) {
+	splitRoute := strings.Split(r.URL.String(), "?email=")
+	email := strings.Trim(splitRoute[1], "%22")
+	fmt.Printf("Requested all transactions of UserEmail: %v\n", email)
+	DBServer = t
+	allTransactionsByUserEmail, err := DBServer.GetAllTransactionsByUserEmail(email)
+	if err != nil {
+		log.Println(err)
+	}
+	b, err := fmt.Fprint(w, allTransactionsByUserEmail)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(b)
+}
+
 func Start(config *Config) error {
 	var rustServer RestServer
 	var DBServer = Transaction{}
 	rustServer = DBServer
 	http.HandleFunc("/getStatus", rustServer.getStatusById)
 	http.HandleFunc("/getAllTransactionsByUserId", rustServer.getAllTransactionsByUserId)
+	http.HandleFunc("/getAllTransactionsByUserEmail", rustServer.getAllTransactionsByUserEmail)
 	return http.ListenAndServe(":9000", nil)
 }

@@ -1,20 +1,22 @@
  ☐ TransactionAPI
    ☐ REST side
      ☐ endpoints
-       ☐ get status by user id
-       ☐ get all transactions by user id
+       ☐ Create transaction
+       ✔ get status by user id @done (22-06-22 21:23)
+       ✔ get all transactions by user id @done (22-06-22 21:23)
        ☐ get all transactions by user email
        ☐ cancel transaction
      ☐ tests
    ☐ DB side
      ☐ CRUDs
-       ☐ Create
+       ☐ Create transaction
        ✔ Find status by payment id @done (22-06-20 12:33)
        ✔ Find all by UserID @done (22-06-20 12:33)
        ☐ Find all by UserEmail
-       ☐ Cancel payment
+       ☐ Cancel transaction
      ☐ tests
    ☐ PaySys side
+     ☐ Mock function
      ☐ Authorization
    ☐ Other
      ✔ docker @done (22-06-20 12:31)
