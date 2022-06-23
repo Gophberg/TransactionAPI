@@ -37,12 +37,14 @@ type Status struct {
 }
 
 type DBQuerier interface {
+	CreateTransaction() error
 	GetTransactionStatusById(int) (string, error)
 	GetAllTransactionsByUserId(int) ([]Transaction, error)
 	GetAllTransactionsByUserEmail(string) ([]Transaction, error)
 }
 
 type RestServer interface {
+	createTransaction(http.ResponseWriter, *http.Request)
 	getStatusById(http.ResponseWriter, *http.Request)
 	getAllTransactionsByUserId(http.ResponseWriter, *http.Request)
 	getAllTransactionsByUserEmail(http.ResponseWriter, *http.Request)

@@ -10,6 +10,20 @@ import (
 
 var DBServer DBQuerier
 
+func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Requested create transaction")
+	DBServer = t
+	err := DBServer.CreateTransaction()
+	if err != nil {
+		log.Println(err)
+	}
+	b, err := fmt.Fprint(w, err)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(b)
+}
+
 func (t Transaction) getStatusById(w http.ResponseWriter, r *http.Request) {
 	splitRoute := strings.Split(r.URL.String(), "?id=")
 	id, err := strconv.Atoi(splitRoute[1])
@@ -71,5 +85,15 @@ func Start(config *Config) error {
 	http.HandleFunc("/getStatus", rustServer.getStatusById)
 	http.HandleFunc("/getAllTransactionsByUserId", rustServer.getAllTransactionsByUserId)
 	http.HandleFunc("/getAllTransactionsByUserEmail", rustServer.getAllTransactionsByUserEmail)
+	//t := Transaction{
+	//	UserID:       5,
+	//	UserEmail:    "geroge@mail.edu",
+	//	Amount:       decimal.NewFromFloat(20.11),
+	//	CreationDate: "",
+	//	UpdateDate:   "",
+	//	Status:       "New",
+	//}
+	//DBServer = t
+	http.HandleFunc("/createTransaction", rustServer.createTransaction)
 	return http.ListenAndServe(":9000", nil)
 }
