@@ -7,6 +7,8 @@ import (
 
 type Config struct {
 	Jwttoken     string `yaml:"jwttoken"`
+	Dbhost       string `yaml:"dbhost"`
+	Dbname       string `yaml:"dbname"`
 	Dbusername   string `yaml:"dbusername"`
 	Dbpassword   string `yaml:"dbpassword"`
 	Dockerdbport string `yaml:"dockerdbport"`
@@ -37,10 +39,10 @@ type Status struct {
 }
 
 type DBQuerier interface {
-	CreateTransaction() error
-	GetTransactionStatusById(int) (string, error)
-	GetAllTransactionsByUserId(int) ([]Transaction, error)
-	GetAllTransactionsByUserEmail(string) ([]Transaction, error)
+	CreateTransaction(Config) error
+	GetTransactionStatusById(Config, int) (string, error)
+	GetAllTransactionsByUserId(Config, int) ([]Transaction, error)
+	GetAllTransactionsByUserEmail(Config, string) ([]Transaction, error)
 }
 
 type RestServer interface {

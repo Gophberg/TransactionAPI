@@ -6,21 +6,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-//type DBServer struct {
-//	connDb *sql.DB
-//	transaction Transaction
-//}
-
-func ConnDB() (*sql.DB, error) {
-	db, err := sql.Open("postgres", "host=localhost user=postgres password='postgres' dbname=transactions sslmode=disable")
+func ConnDB(config Config) (*sql.DB, error) {
+	url := fmt.Sprintf("host=%v user=$v password='%v' dbname=%v sslmode=disable", config.Dbhost, config.Dbusername, config.Dbpassword, config.Dbname)
+	db, err := sql.Open("postgres", url)
 	if err != nil {
 		return nil, err
 	}
 	return db, err
 }
 
-func (t Transaction) CreateTransaction() error {
-	db, err := ConnDB()
+func (t Transaction) CreateTransaction(config Config) error {
+	db, err := ConnDB(config)
 	if err != nil {
 		return err
 	}
@@ -37,25 +33,11 @@ func (t Transaction) CreateTransaction() error {
 		`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) 
 		VALUES (5, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') RETURNING id`).Scan(&tt)
 	fmt.Println(*tt)
-	//err = db.QueryRow(
-	//	`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status)
-	//	VALUES (5, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') RETURNING id`).Scan(t.Id)
 	return err
-	//return db.QueryRow(
-	//	`insert into transactions (userid, useremail, amount, currency, creationdate, updatedate, status)
-	//	values (4, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') returning id`,)
-	//}
-
-	//return r.store.db.QueryRow(
-	//	"INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id",
-	//	u.Email,
-	//	u.EncryptedPassword,
-	//).Scan(&u.ID)
-
 }
 
-func (t Transaction) GetTransactionStatusById(id int) (string, error) {
-	db, err := ConnDB()
+func (t Transaction) GetTransactionStatusById(config Config, id int) (string, error) {
+	db, err := ConnDB(config)
 	if err != nil {
 		return "", err
 	}
@@ -75,14 +57,8 @@ func (t Transaction) GetTransactionStatusById(id int) (string, error) {
 	return t.Status, nil
 }
 
-func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
-	var items []Transaction
-	db, err := ConnDB()
-	if err != nil {
-		return nil, err
-	}
-	query := fmt.Sprintf(`SELECT * FROM transactions WHERE userid = %d;`, id)
-	rows, err := db.Query(query)
+func (t Transaction) GetAllTransactionsByUserId(config Config, id int) ([]Transaction, error) {
+	db, err := ConnDB(config)
 	if err != nil {
 		return nil, err
 	}
@@ -92,6 +68,15 @@ func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
 
 		}
 	}(db)
+
+	var items []Transaction
+
+	query := fmt.Sprintf(`SELECT * FROM transactions WHERE userid = %d;`, id)
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
 
 	for rows.Next() {
 		var i Transaction
@@ -112,27 +97,27 @@ func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
 	return items, nil
 }
 
-func (t Transaction) GetAllTransactionsByUserEmail(email string) ([]Transaction, error) {
-	var items []Transaction
-	db, err := ConnDB()
+func (t Transaction) GetAllTransactionsByUserEmail(config Config, email string) ([]Transaction, error) {
+	db, err := ConnDB(config)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("Requested query email: %v\n", email)
-	query := fmt.Sprintf(`SELECT * FROM transactions WHERE useremail = '%v';`, email)
-
-	rows, err := db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-
 	defer func(db *sql.DB) {
 		err := db.Close()
 		if err != nil {
 
 		}
 	}(db)
+
+	fmt.Printf("Requested query email: %v\n", email)
+	query := fmt.Sprintf(`SELECT * FROM transactions WHERE useremail = '%v';`, email)
+
+	var items []Transaction
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
 
 	for rows.Next() {
 		var i Transaction
