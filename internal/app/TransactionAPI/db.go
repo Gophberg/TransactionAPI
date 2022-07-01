@@ -10,6 +10,7 @@ var config Config
 
 func ConnDB() (*sql.DB, error) {
 	url := fmt.Sprintf("host=%v user=$v password='%v' dbname=%v sslmode=disable", config.Dbhost, config.Dbusername, config.Dbpassword, config.Dbname)
+	fmt.Printf("Connection db URL <%v> \n", url)
 	db, err := sql.Open("postgres", url)
 	if err != nil {
 		return nil, err
@@ -50,12 +51,14 @@ func (t Transaction) GetTransactionStatusById(id int) (string, error) {
 		}
 	}(db)
 
+	fmt.Printf("Query status <%v> id\n", id)
 	query := fmt.Sprintf(`SELECT status FROM transactions WHERE id = %d;`, id)
 	if err := db.QueryRow(query).Scan(&t.Status); err != nil {
 		if err == sql.ErrNoRows {
 			return "", err
 		}
 	}
+	fmt.Printf("Status is <%v>\n", t.Status)
 	return t.Status, nil
 }
 
