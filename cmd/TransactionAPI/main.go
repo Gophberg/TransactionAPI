@@ -6,8 +6,7 @@ import (
 )
 
 func main() {
-	config := TransactionAPI.NewConfig()
-	if err := TransactionAPI.Start(config); err != nil {
+	if err := TransactionAPI.Start(); err != nil {
 		log.Fatal(err)
 	}
 }

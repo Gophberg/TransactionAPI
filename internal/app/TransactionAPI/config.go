@@ -7,8 +7,7 @@ import (
 	"os"
 )
 
-func NewConfig() *Config {
-	var config Config
+func (c *Config) NewConfig() {
 	f, err := os.Open("configs/transactionapi.yaml")
 	defer func(f *os.File) {
 		err := f.Close()
@@ -16,13 +15,12 @@ func NewConfig() *Config {
 			log.Fatal(err)
 		}
 	}(f)
-	flds, err := ioutil.ReadAll(f)
+	fields, err := ioutil.ReadAll(f)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = yaml.Unmarshal(flds, &config)
+	err = yaml.Unmarshal(fields, &c)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &config
 }

@@ -1,6 +1,6 @@
 jwttoken: mysupersecrettoken
 dbhost: localhost
 dbname: transactions
-dbusername: postres
-dbpassword: postres
+dbusername: postgres
+dbpassword: postgres
 dockerdbport: 5432

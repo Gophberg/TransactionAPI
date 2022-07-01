@@ -6,10 +6,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var config Config
-
 func ConnDB() (*sql.DB, error) {
-	url := fmt.Sprintf("host=%v user=$v password='%v' dbname=%v sslmode=disable", config.Dbhost, config.Dbusername, config.Dbpassword, config.Dbname)
+	url := fmt.Sprintf("host=%v user=%v password='%v' dbname=%v sslmode=disable", config.Dbhost, config.Dbusername, config.Dbpassword, config.Dbname)
 	fmt.Printf("Connection db URL <%v> \n", url)
 	db, err := sql.Open("postgres", url)
 	if err != nil {

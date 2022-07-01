@@ -4,7 +4,10 @@ import (
 	"net/http"
 )
 
-func Start(config *Config) error {
+var config Config
+
+func Start() error {
+	config.NewConfig()
 	t := Transaction{}
 	//var restServer RestServer
 	//var DBServer = Transaction{}
