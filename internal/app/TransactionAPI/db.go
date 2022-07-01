@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"log"
 )
 
 func ConnDB() (*sql.DB, error) {
 	url := fmt.Sprintf("host=%v user=%v password='%v' dbname=%v sslmode=disable", config.Dbhost, config.Dbusername, config.Dbpassword, config.Dbname)
-	fmt.Printf("Connection db URL <%v> \n", url)
 	db, err := sql.Open("postgres", url)
 	if err != nil {
 		return nil, err
@@ -16,7 +16,7 @@ func ConnDB() (*sql.DB, error) {
 	return db, err
 }
 
-func (t Transaction) CreateTransaction() error {
+func (t *Transaction) CreateTransaction() error {
 	db, err := ConnDB()
 	if err != nil {
 		return err
@@ -28,12 +28,13 @@ func (t Transaction) CreateTransaction() error {
 		}
 	}(db)
 
-	fmt.Println(t)
-	var tt *int
+	log.Println("err")
+	fmt.Printf("type is %T\n", t.Id)
+	//var tt *int
 	err = db.QueryRow(
 		`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) 
-		VALUES (5, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') RETURNING id`).Scan(&tt)
-	fmt.Println(*tt)
+		VALUES (5, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') RETURNING id`).Scan(&t.Id)
+	//fmt.Println(*tt)
 	return err
 }
 

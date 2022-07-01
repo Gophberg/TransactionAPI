@@ -10,7 +10,7 @@ import (
 
 func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Requested create transaction")
-	fmt.Printf("Request: %v\n", r)
+	//fmt.Printf("Request: %v\n", r)
 	err := t.CreateTransaction()
 	if err != nil {
 		log.Println(err)
