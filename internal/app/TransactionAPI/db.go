@@ -6,7 +6,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func ConnDB(config Config) (*sql.DB, error) {
+var config Config
+
+func ConnDB() (*sql.DB, error) {
 	url := fmt.Sprintf("host=%v user=$v password='%v' dbname=%v sslmode=disable", config.Dbhost, config.Dbusername, config.Dbpassword, config.Dbname)
 	db, err := sql.Open("postgres", url)
 	if err != nil {
@@ -15,8 +17,8 @@ func ConnDB(config Config) (*sql.DB, error) {
 	return db, err
 }
 
-func (t Transaction) CreateTransaction(config Config) error {
-	db, err := ConnDB(config)
+func (t Transaction) CreateTransaction() error {
+	db, err := ConnDB()
 	if err != nil {
 		return err
 	}
@@ -36,8 +38,8 @@ func (t Transaction) CreateTransaction(config Config) error {
 	return err
 }
 
-func (t Transaction) GetTransactionStatusById(config Config, id int) (string, error) {
-	db, err := ConnDB(config)
+func (t Transaction) GetTransactionStatusById(id int) (string, error) {
+	db, err := ConnDB()
 	if err != nil {
 		return "", err
 	}
@@ -57,8 +59,8 @@ func (t Transaction) GetTransactionStatusById(config Config, id int) (string, er
 	return t.Status, nil
 }
 
-func (t Transaction) GetAllTransactionsByUserId(config Config, id int) ([]Transaction, error) {
-	db, err := ConnDB(config)
+func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
+	db, err := ConnDB()
 	if err != nil {
 		return nil, err
 	}
@@ -97,8 +99,8 @@ func (t Transaction) GetAllTransactionsByUserId(config Config, id int) ([]Transa
 	return items, nil
 }
 
-func (t Transaction) GetAllTransactionsByUserEmail(config Config, email string) ([]Transaction, error) {
-	db, err := ConnDB(config)
+func (t Transaction) GetAllTransactionsByUserEmail(email string) ([]Transaction, error) {
+	db, err := ConnDB()
 	if err != nil {
 		return nil, err
 	}

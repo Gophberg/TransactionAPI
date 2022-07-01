@@ -2,8 +2,14 @@ package TransactionAPI
 
 import (
 	"github.com/shopspring/decimal"
-	"net/http"
 )
+
+//const (
+//	DB_HOST     = config.Dbhost
+//	DB_USERNAME = config.Dbusername
+//	DB_PASSWORD = config.Dbpassword
+//	DB_NAME     = config.Dbname
+//)
 
 type Config struct {
 	Jwttoken     string `yaml:"jwttoken"`
@@ -38,16 +44,24 @@ type Status struct {
 	Canceled string `json:"canceled"`
 }
 
-type DBQuerier interface {
-	CreateTransaction(Config) error
-	GetTransactionStatusById(Config, int) (string, error)
-	GetAllTransactionsByUserId(Config, int) ([]Transaction, error)
-	GetAllTransactionsByUserEmail(Config, string) ([]Transaction, error)
+//type DBQuerier interface {
+//	CreateTransaction(Config) error
+//	GetTransactionStatusById(Config, int) (string, error)
+//	GetAllTransactionsByUserId(Config, int) ([]Transaction, error)
+//	GetAllTransactionsByUserEmail(Config, string) ([]Transaction, error)
+//}
+//
+//type RestServer interface {
+//	createTransaction(http.ResponseWriter, *http.Request)
+//	getStatusById(http.ResponseWriter, *http.Request)
+//	getAllTransactionsByUserId(http.ResponseWriter, *http.Request)
+//	getAllTransactionsByUserEmail(http.ResponseWriter, *http.Request)
+//}
+
+type restTransaction struct {
+	transaction Transaction
 }
 
-type RestServer interface {
-	createTransaction(http.ResponseWriter, *http.Request)
-	getStatusById(http.ResponseWriter, *http.Request)
-	getAllTransactionsByUserId(http.ResponseWriter, *http.Request)
-	getAllTransactionsByUserEmail(http.ResponseWriter, *http.Request)
+type dbTransaction struct {
+	transaction Transaction
 }

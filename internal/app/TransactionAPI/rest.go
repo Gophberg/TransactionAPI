@@ -8,12 +8,10 @@ import (
 	"strings"
 )
 
-var DBServer DBQuerier
-
-func (t Transaction) createTransaction(config Config, w http.ResponseWriter, r *http.Request) {
+func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Requested create transaction")
-	DBServer = t
-	err := DBServer.CreateTransaction(config)
+	fmt.Printf("Request: %v", r)
+	err := t.CreateTransaction()
 	if err != nil {
 		log.Println(err)
 	}
@@ -24,15 +22,15 @@ func (t Transaction) createTransaction(config Config, w http.ResponseWriter, r *
 	fmt.Println(b)
 }
 
-func (t Transaction) getStatusById(config Config, w http.ResponseWriter, r *http.Request) {
+func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Request) {
 	splitRoute := strings.Split(r.URL.String(), "?id=")
 	id, err := strconv.Atoi(splitRoute[1])
 	if err != nil {
 		log.Println(err)
 	}
 	fmt.Printf("Requested status of transaction id: %d\n", id)
-	DBServer = t
-	status, err := DBServer.GetTransactionStatusById(config, id)
+
+	status, err := t.GetTransactionStatusById(id)
 	if err != nil {
 		log.Println(err)
 	}
@@ -43,35 +41,33 @@ func (t Transaction) getStatusById(config Config, w http.ResponseWriter, r *http
 	fmt.Println(b)
 }
 
-func (t Transaction) getAllTransactionsByUserId(config Config, w http.ResponseWriter, r *http.Request) {
+func (t Transaction) getAllTransactionsByUserId(w http.ResponseWriter, r *http.Request) {
 	splitRoute := strings.Split(r.URL.String(), "?id=")
 	id, err := strconv.Atoi(splitRoute[1])
 	if err != nil {
 		log.Println(err)
 	}
 	fmt.Printf("Requested all transactions of UserId: %d\n", id)
-	DBServer = t
-	allTransactionsByUserId, err := DBServer.GetAllTransactionsByUserId(config, id)
+	transactions, err := t.GetAllTransactionsByUserId(id)
 	if err != nil {
 		log.Println(err)
 	}
-	b, err := fmt.Fprint(w, allTransactionsByUserId)
+	b, err := fmt.Fprint(w, transactions)
 	if err != nil {
 		log.Println(err)
 	}
 	fmt.Println(b)
 }
 
-func (t Transaction) getAllTransactionsByUserEmail(config Config, w http.ResponseWriter, r *http.Request) {
+func (t Transaction) getAllTransactionsByUserEmail(w http.ResponseWriter, r *http.Request) {
 	splitRoute := strings.Split(r.URL.String(), "?email=")
 	email := strings.Trim(splitRoute[1], "%22")
 	fmt.Printf("Requested all transactions of UserEmail: %v\n", email)
-	DBServer = t
-	allTransactionsByUserEmail, err := DBServer.GetAllTransactionsByUserEmail(config, email)
+	transactions, err := t.GetAllTransactionsByUserEmail(email)
 	if err != nil {
 		log.Println(err)
 	}
-	b, err := fmt.Fprint(w, allTransactionsByUserEmail)
+	b, err := fmt.Fprint(w, transactions)
 	if err != nil {
 		log.Println(err)
 	}
