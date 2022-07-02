@@ -1,25 +1,54 @@
 package TransactionAPI
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"mime"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
 func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Requested create transaction")
-	//fmt.Printf("Request: %v\n", r)
-	err := t.CreateTransaction()
+	log.Printf("Requested create transaction: %s\n", r.URL.Path)
+
+	contentType := r.Header.Get("Content-Type")
+	mediatype, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if mediatype != "application/json" {
+		http.Error(w, "expect application/json Content-Type", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	//var rt RequestTask
+	if err := dec.Decode(&t); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	id, err := t.CreateTransaction(t)
 	if err != nil {
 		log.Println(err)
 	}
+	//js, err := json.Marshal(ResponseId{Id: id})
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	return
+	//}
+	//w.Header().Set("Content-Type", "application/json")
+	//w.Write(js)
+
 	b, err := fmt.Fprint(w, err)
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(b)
+	log.Printf("%d bytes writed. With id: %d", b, id)
 }
 
 func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Request) {

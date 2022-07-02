@@ -16,10 +16,10 @@ func ConnDB() (*sql.DB, error) {
 	return db, err
 }
 
-func (t *Transaction) CreateTransaction() error {
+func (t *Transaction) CreateTransaction(c Transaction) (int, error) {
 	db, err := ConnDB()
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer func(db *sql.DB) {
 		err := db.Close()
@@ -29,13 +29,32 @@ func (t *Transaction) CreateTransaction() error {
 	}(db)
 
 	log.Println("err")
-	fmt.Printf("type is %T\n", t.Id)
+	log.Printf("type is %T\n", t.Id)
+	log.Printf("Reseived Credentials: %v", c)
 	//var tt *int
+
+	//return r.store.db.QueryRow(
+	//	"INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id",
+	//	u.Email,
+	//	u.EncryptedPassword,
+	//).Scan(&u.ID)
+
 	err = db.QueryRow(
 		`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) 
-		VALUES (5, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') RETURNING id`).Scan(&t.Id)
-	//fmt.Println(*tt)
-	return err
+		VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+		c.UserID,
+		c.UserEmail,
+		c.Amount,
+		c.Currency,
+		c.CreationDate,
+		c.UpdateDate,
+		c.Status,
+	).Scan(&t.Id)
+	//err = db.QueryRow(
+	//	`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status)
+	//	VALUES (5, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') RETURNING id`).Scan(&t.Id)
+	//log.Println(*tt)
+	return t.Id, err
 }
 
 func (t Transaction) GetTransactionStatusById(id int) (string, error) {

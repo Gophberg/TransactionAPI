@@ -4,13 +4,6 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-//const (
-//	DB_HOST     = config.Dbhost
-//	DB_USERNAME = config.Dbusername
-//	DB_PASSWORD = config.Dbpassword
-//	DB_NAME     = config.Dbname
-//)
-
 type Config struct {
 	Jwttoken     string `yaml:"jwttoken"`
 	Dbhost       string `yaml:"dbhost"`
@@ -42,26 +35,4 @@ type Status struct {
 	Failure  string `json:"failure"`
 	Error    string `json:"error"`
 	Canceled string `json:"canceled"`
-}
-
-//type DBQuerier interface {
-//	CreateTransaction(Config) error
-//	GetTransactionStatusById(Config, int) (string, error)
-//	GetAllTransactionsByUserId(Config, int) ([]Transaction, error)
-//	GetAllTransactionsByUserEmail(Config, string) ([]Transaction, error)
-//}
-//
-//type RestServer interface {
-//	createTransaction(http.ResponseWriter, *http.Request)
-//	getStatusById(http.ResponseWriter, *http.Request)
-//	getAllTransactionsByUserId(http.ResponseWriter, *http.Request)
-//	getAllTransactionsByUserEmail(http.ResponseWriter, *http.Request)
-//}
-
-type restTransaction struct {
-	transaction Transaction
-}
-
-type dbTransaction struct {
-	transaction Transaction
 }
