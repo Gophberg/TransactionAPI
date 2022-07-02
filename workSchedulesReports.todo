@@ -4,6 +4,10 @@ File started
 02-07-2022
   ☐ Write json handlers
     ✔ start @done (22-07-02 13:24)
+      ✔ for create method @done (22-07-02 14:06)
+        ✔ responce by json @done (22-07-02 14:48)
+      ☐ for getStatus methods
+      ☐ for cancel method
     ☐ complete
     ☐ pause
   ☐ Making gPRC interfaces

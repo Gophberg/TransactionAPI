@@ -28,16 +28,7 @@ func (t *Transaction) CreateTransaction(c Transaction) (int, error) {
 		}
 	}(db)
 
-	log.Println("err")
-	log.Printf("type is %T\n", t.Id)
 	log.Printf("Reseived Credentials: %v", c)
-	//var tt *int
-
-	//return r.store.db.QueryRow(
-	//	"INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id",
-	//	u.Email,
-	//	u.EncryptedPassword,
-	//).Scan(&u.ID)
 
 	err = db.QueryRow(
 		`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) 
@@ -50,14 +41,10 @@ func (t *Transaction) CreateTransaction(c Transaction) (int, error) {
 		c.UpdateDate,
 		c.Status,
 	).Scan(&t.Id)
-	//err = db.QueryRow(
-	//	`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status)
-	//	VALUES (5, 'john@mail.edu', 33.12, 'rub', '2022-06-23T15:55:00Z', '2022-06-23T15:55:01Z', 'new') RETURNING id`).Scan(&t.Id)
-	//log.Println(*tt)
 	return t.Id, err
 }
 
-func (t Transaction) GetTransactionStatusById(id int) (string, error) {
+func (t Transaction) GetTransactionStatusById(c Transaction) (string, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return "", err
@@ -69,8 +56,9 @@ func (t Transaction) GetTransactionStatusById(id int) (string, error) {
 		}
 	}(db)
 
-	fmt.Printf("Query status <%v> id\n", id)
-	query := fmt.Sprintf(`SELECT status FROM transactions WHERE id = %d;`, id)
+	log.Printf("Query request <%v> status\n", c.Id)
+
+	query := fmt.Sprintf(`SELECT status FROM transactions WHERE id = %d;`, c.Id)
 	if err := db.QueryRow(query).Scan(&t.Status); err != nil {
 		if err == sql.ErrNoRows {
 			return "", err
@@ -80,7 +68,7 @@ func (t Transaction) GetTransactionStatusById(id int) (string, error) {
 	return t.Status, nil
 }
 
-func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
+func (t Transaction) GetAllTransactionsByUserId(c Transaction) ([]Transaction, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return nil, err
@@ -94,7 +82,7 @@ func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
 
 	var items []Transaction
 
-	query := fmt.Sprintf(`SELECT * FROM transactions WHERE userid = %d;`, id)
+	query := fmt.Sprintf(`SELECT * FROM transactions WHERE userid = %d;`, c.UserID)
 
 	rows, err := db.Query(query)
 	if err != nil {
@@ -120,7 +108,7 @@ func (t Transaction) GetAllTransactionsByUserId(id int) ([]Transaction, error) {
 	return items, nil
 }
 
-func (t Transaction) GetAllTransactionsByUserEmail(email string) ([]Transaction, error) {
+func (t Transaction) GetAllTransactionsByUserEmail(c Transaction) ([]Transaction, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return nil, err
@@ -132,8 +120,8 @@ func (t Transaction) GetAllTransactionsByUserEmail(email string) ([]Transaction,
 		}
 	}(db)
 
-	fmt.Printf("Requested query email: %v\n", email)
-	query := fmt.Sprintf(`SELECT * FROM transactions WHERE useremail = '%v';`, email)
+	fmt.Printf("Requested query email: %v\n", c.UserEmail)
+	query := fmt.Sprintf(`SELECT * FROM transactions WHERE useremail = '%v';`, c.UserEmail)
 
 	var items []Transaction
 

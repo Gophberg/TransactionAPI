@@ -2,12 +2,9 @@ package TransactionAPI
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"mime"
 	"net/http"
-	"strconv"
-	"strings"
 )
 
 func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +23,6 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
-	//var rt RequestTask
 	if err := dec.Decode(&t); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -36,69 +32,133 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	//js, err := json.Marshal(ResponseId{Id: id})
-	//if err != nil {
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//	return
-	//}
-	//w.Header().Set("Content-Type", "application/json")
-	//w.Write(js)
 
-	b, err := fmt.Fprint(w, err)
+	js, err := json.Marshal(id)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	log.Printf("%d bytes writed. With id: %d", b, id)
+	w.Header().Set("Content-Type", "application/json")
+	write, err := w.Write(js)
+	if err != nil {
+		return
+	}
+	log.Printf("%v bytes written to ResponseWriter", write)
 }
 
 func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Request) {
-	splitRoute := strings.Split(r.URL.String(), "?id=")
-	id, err := strconv.Atoi(splitRoute[1])
-	if err != nil {
-		log.Println(err)
-	}
-	fmt.Printf("Requested status of transaction id: %d\n", id)
+	log.Printf("Requested transaction status by id: %s\n", r.URL.Path)
 
-	status, err := t.GetTransactionStatusById(id)
+	contentType := r.Header.Get("Content-Type")
+	mediatype, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if mediatype != "application/json" {
+		http.Error(w, "expect application/json Content-Type", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&t); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	status, err := t.GetTransactionStatusById(t)
 	if err != nil {
 		log.Println(err)
 	}
-	b, err := fmt.Fprint(w, status)
+
+	js, err := json.Marshal(status)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	fmt.Println(b)
+	w.Header().Set("Content-Type", "application/json")
+	write, err := w.Write(js)
+	if err != nil {
+		return
+	}
+	log.Printf("%v bytes written to ResponseWriter", write)
 }
 
 func (t Transaction) getAllTransactionsByUserId(w http.ResponseWriter, r *http.Request) {
-	splitRoute := strings.Split(r.URL.String(), "?id=")
-	id, err := strconv.Atoi(splitRoute[1])
+	log.Printf("Requested all transactions status by UserId: %s\n", r.URL.Path)
+
+	contentType := r.Header.Get("Content-Type")
+	mediatype, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if mediatype != "application/json" {
+		http.Error(w, "expect application/json Content-Type", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&t); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	transactions, err := t.GetAllTransactionsByUserId(t)
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Printf("Requested all transactions of UserId: %d\n", id)
-	transactions, err := t.GetAllTransactionsByUserId(id)
+
+	js, err := json.Marshal(transactions)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	b, err := fmt.Fprint(w, transactions)
+	w.Header().Set("Content-Type", "application/json")
+	write, err := w.Write(js)
 	if err != nil {
-		log.Println(err)
+		return
 	}
-	fmt.Println(b)
+	log.Printf("%v bytes written to ResponseWriter", write)
 }
 
 func (t Transaction) getAllTransactionsByUserEmail(w http.ResponseWriter, r *http.Request) {
-	splitRoute := strings.Split(r.URL.String(), "?email=")
-	email := strings.Trim(splitRoute[1], "%22")
-	fmt.Printf("Requested all transactions of UserEmail: %v\n", email)
-	transactions, err := t.GetAllTransactionsByUserEmail(email)
+	log.Printf("Requested all transactions status by UserEmail: %s\n", r.URL.Path)
+
+	contentType := r.Header.Get("Content-Type")
+	mediatype, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if mediatype != "application/json" {
+		http.Error(w, "expect application/json Content-Type", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&t); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	transactions, err := t.GetAllTransactionsByUserEmail(t)
 	if err != nil {
 		log.Println(err)
 	}
-	b, err := fmt.Fprint(w, transactions)
+
+	js, err := json.Marshal(transactions)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	fmt.Println(b)
+	w.Header().Set("Content-Type", "application/json")
+	write, err := w.Write(js)
+	if err != nil {
+		return
+	}
+	log.Printf("%v bytes written to ResponseWriter", write)
 }

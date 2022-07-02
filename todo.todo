@@ -1,7 +1,7 @@
  ☐ TransactionAPI
    ☐ REST side
      ☐ endpoints
-       ☐ Create transaction
+       ✔ Create transaction @done (22-07-02 14:48)
        ✔ get status by user id @done (22-06-22 21:23)
        ✔ get all transactions by user id @done (22-06-22 21:23)
        ✔ get all transactions by user email @done (22-06-22 23:22)
@@ -9,7 +9,7 @@
      ☐ tests
    ☐ DB side
      ☐ CRUDs
-       ☐ Create transaction
+       ✔ Create transaction @done (22-07-02 14:48)
        ✔ Find status by payment id @done (22-06-20 12:33)
        ✔ Find all by UserID @done (22-06-20 12:33)
        ✔ Find all by UserEmail @done (22-06-22 23:22)
