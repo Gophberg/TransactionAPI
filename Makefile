@@ -13,8 +13,8 @@ run: build
 	./build/$(filename)__linux-x86_64
 
 eps:
-	go build -o ./internal/app/TransactionAPI/mock/mock ./internal/app/TransactionAPI/mock/main.go
-	./internal/app/TransactionAPI/mock/mock
+	go build -o ./build/mock ./internal/app/TransactionAPI/mock/main.go
+	./build/mock
 
 test:
 	go test -v -race -timeout 30s ./...
