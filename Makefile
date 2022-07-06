@@ -15,4 +15,9 @@ run: build
 test:
 	go test -v -race -timeout 30s ./...
 
+gen:
+	protoc --go_out=. --go_opt=paths=import \
+        --go-grpc_out=. --go-grpc_opt=paths=import \
+        proto/extPaySys.proto
+
 .DEFAULT_GOAL := run
