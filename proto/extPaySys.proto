@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "internal/app/pb";
+
+package extPaySys;
+
+service Transaction {
+  rpc Transaction (TransactionRequest) returns (TransactionResponse) {}
+}
+
+message TransactionRequest {
+  int64 ID = 1;
+  int64 UserID = 2;
+  string UserEmail = 3;
+  message Amount {
+    int64 units = 4;
+    int32 nanos = 5;
+  }
+  string Currency = 6;
+}
+
+message TransactionResponse {
+  string message = 1;
+}

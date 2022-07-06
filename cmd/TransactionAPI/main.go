@@ -1,7 +1,7 @@
 package main
 
 import (
-	"TransactionAPI/internal/app/TransactionAPI"
+	"github.com/Gophberg/TransactionAPI/internal/app/TransactionAPI"
 	"log"
 )
 

@@ -1,12 +1,12 @@
 File started 
  ✔ at @done (22-07-02 13:22)
 
-02-07-2022
+02-07-2022:
   ☐ Write json handlers
     ✔ start @done (22-07-02 13:24)
       ✔ for create method @done (22-07-02 14:06)
         ✔ responce by json @done (22-07-02 14:48)
-      ✔ for getStatus methods @done (22-07-02 15:24)
+      ✔ for getStatus methods @done (22-07-02)
       ☐ for cancel method
     ☐ complete
     ☐ pause
@@ -14,3 +14,27 @@ File started
     ☐ start
     ☐ complete
     ☐ pause
+
+03-07-2022:
+  ☐ try to design at least one gPRC function
+  ☐ design mock extPaySys functions
+
+04-07-2022:
+  ☐ Explore Protocol Buffers documentation
+    ✔ in progress @done (22-07-04 until lights out)
+  ☐ try to design at least one gPRC function
+  ☐ design mock extPaySys functions
+
+05-07-2022:
+  ☐ Explore Protocol Buffers documentation
+    ✔ in progress @done (22-07-05 15:05)
+  ✔ try to design at least one gPRC function @done (22-07-05 15:05)
+  ☐ design mock extPaySys functions
+Tasks that appeared during the work:
+  ✔ Resolve imports @done (22-07-05)
+
+06-07-2022:
+  ☐ design mock extPaySys functions
+  ☐ begin design testing functions
+Tasks that appeared during the work:
+
