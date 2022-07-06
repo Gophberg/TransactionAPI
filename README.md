@@ -21,4 +21,4 @@ Note: In this point my db contains the two records. `joe@mail.edu` and `jane@mai
   
 To create transaction, do request  
 `curl -X POST http://localhost:9000/createTransaction -H "Content-Type: application/json" --data '{"userid": 100, "useremail": "maks@mail.edu", "amount": 333.11, "currency": "usd", "datecreated": "2022-07-02T13:57:00Z", "dateupdated": "2022-07-02T13:57:02Z", "status": "Canceled"}'`  
-You cat to post your credentials in this request
+You can to post your credentials in this request
