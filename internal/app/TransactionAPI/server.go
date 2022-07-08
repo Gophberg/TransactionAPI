@@ -23,7 +23,7 @@ var (
 var config Config
 
 func Start() error {
-	go grpcserver()
+	go grpcClient()
 	config.NewConfig()
 	t := Transaction{}
 	http.HandleFunc("/getTransactionStatusById", t.getTransactionStatusById)
@@ -33,7 +33,7 @@ func Start() error {
 	return http.ListenAndServe(":9000", nil)
 }
 
-func grpcserver() {
+func grpcClient() {
 	flag.Parse()
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -44,8 +44,27 @@ func grpcserver() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.Transaction(ctx, &pb.TransactionRequest{UserEmail: "hello@joe.edu"})
-	//r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
+	r, err := c.Transaction(ctx, &pb.TransactionRequest{
+		ID:        1,
+		UserID:    2,
+		UserEmail: "joe@mail.edu",
+		Currency:  "USD",
+		Amount: &pb.TransactionRequest_Amount{
+			Units: 11,
+			Nanos: 22,
+		},
+	})
+	//amount := &pb.TransactionRequest_Amount{
+	//	Units: 11,
+	//	Nanos: 22,
+	//}
+	//r, err := c.Transaction(ctx, &pb.TransactionRequest{
+	//	ID:        1,
+	//	UserID:    2,
+	//	UserEmail: "joe@mail.edu",
+	//	Currency:  "USD",
+	//	Amount: amount,
+	//})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}

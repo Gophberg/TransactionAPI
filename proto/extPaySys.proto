@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "internal/app/pb";
+option go_package = "internal/app/TransactionAPI/pb";
 
 package extPaySys;
 
@@ -8,16 +8,19 @@ service Transaction {
   rpc Transaction (TransactionRequest) returns (TransactionResponse) {}
 }
 
+
 message TransactionRequest {
   int64 ID = 1;
   int64 UserID = 2;
   string UserEmail = 3;
+  string Currency = 4;
   message Amount {
-    int64 units = 4;
-    int32 nanos = 5;
+    int64 Units = 5;
+    int32 Nanos = 6;
   }
-  string Currency = 6;
+  Amount amount = 7;
 }
+
 
 message TransactionResponse {
   string message = 1;

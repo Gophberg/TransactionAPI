@@ -22,7 +22,7 @@ type server struct {
 
 func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*pb.TransactionResponse, error) {
 	log.Printf("Received: %v", in.GetUserEmail())
-	return &pb.TransactionResponse{Message: "Hello " + in.GetUserEmail()}, nil
+	return &pb.TransactionResponse{Message: "Hello " + in.GetUserEmail() + in.GetCurrency()}, nil
 }
 
 func main() {
