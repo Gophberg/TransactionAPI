@@ -5,6 +5,7 @@
        ✔ get status by user id @done (22-06-22 21:23)
        ✔ get all transactions by user id @done (22-06-22 21:23)
        ✔ get all transactions by user email @done (22-06-22 23:22)
+       ☐ lead extPaySys request to the appropriate view
        ☐ cancel transaction
      ☐ tests
    ☐ DB side
@@ -16,7 +17,7 @@
        ☐ Cancel transaction
      ☐ tests
    ☐ PaySys side
-     ☐ Mock function
+     ✔ Mock function @done (22-07-19 21:40)
      ☐ Authorization
    ☐ Other
      ✔ docker @done (22-06-20 12:31)

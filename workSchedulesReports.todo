@@ -57,8 +57,9 @@ Tasks that appeared during the work:
   ☐ contexts
 
 19-07-200:
-  ☐ mock extPaySys functions
+  ✔ mock extPaySys functions @done (22-07-19 21:40)
   ☐ tests
 Tasks that appeared during the work:
   ✔ contexts @done (22-07-19 20:47)
+  ☐ lead extPaySys request to the appropriate view
 

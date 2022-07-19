@@ -24,23 +24,27 @@ type server struct {
 
 func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*pb.TransactionResponse, error) {
 	ctx.Deadline()
-	msg, err := fmt.Printf("UserID: %s\nUser Email: %s\nCurrency: %s\nAmount: %d.%d\n",
+	msg := fmt.Sprintf("UserID: %s\nUser Email: %s\nCurrency: %s\nAmount: %d.%d\n",
 		strconv.Itoa(int(in.GetUserID())),
 		in.GetUserEmail(),
 		in.GetCurrency(),
 		in.GetAmount().Units,
 		in.GetAmount().Nanos,
 	)
-	if err != nil {
-		log.Println(err)
+	log.Printf("Received transaction data:\n%v\n", msg)
+	log.Println("Processing transaction...")
+	status := doTransaction(in)
+	log.Println("Transaction complete with status", status)
+	return &pb.TransactionResponse{Message: status}, nil
+}
+
+func doTransaction(in *pb.TransactionRequest) string {
+	time.Sleep(time.Second * 5) // searching funds in account :)
+	if in.UserEmail == "joe@mail.edu" {
+		log.Println("I hate him")
+		return "canceled"
 	}
-	log.Println(msg)
-	//str := strconv.Itoa(msg)
-	log.Println("Doing some work")
-	time.Sleep(time.Second * 8)
-	log.Println("Some work is done")
-	//return &pb.TransactionResponse{Message: "Received request " + str}, nil
-	return &pb.TransactionResponse{Message: "Hello " + in.GetUserEmail() + strconv.Itoa(int(in.GetAmount().Units))}, nil
+	return "success"
 }
 
 func main() {
