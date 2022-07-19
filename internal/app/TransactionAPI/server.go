@@ -44,30 +44,19 @@ func grpcClient() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
+	amount := &pb.TransactionRequest_Amount{
+		Units: 11,
+		Nanos: 22,
+	}
 	r, err := c.Transaction(ctx, &pb.TransactionRequest{
 		ID:        1,
 		UserID:    2,
 		UserEmail: "joe@mail.edu",
 		Currency:  "USD",
-		Amount: &pb.TransactionRequest_Amount{
-			Units: 11,
-			Nanos: 22,
-		},
+		Amount:    amount,
 	})
-	//amount := &pb.TransactionRequest_Amount{
-	//	Units: 11,
-	//	Nanos: 22,
-	//}
-	//r, err := c.Transaction(ctx, &pb.TransactionRequest{
-	//	ID:        1,
-	//	UserID:    2,
-	//	UserEmail: "joe@mail.edu",
-	//	Currency:  "USD",
-	//	Amount: amount,
-	//})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
-
+	log.Printf("Received response from External Pay System: %s", r.GetMessage())
 }
