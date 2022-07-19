@@ -42,7 +42,7 @@ func grpcClient() {
 	defer conn.Close()
 	c := pb.NewTransactionClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	amount := &pb.TransactionRequest_Amount{
 		Units: 11,

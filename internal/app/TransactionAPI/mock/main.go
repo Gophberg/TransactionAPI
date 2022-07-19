@@ -10,11 +10,12 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"time"
 )
 
 var (
-	port              = flag.Int("port", 50051, "The server port")
-	sleepDuration int = 20
+	port = flag.Int("port", 50051, "The server port")
+	//sleepDuration int = 20
 )
 
 type server struct {
@@ -22,6 +23,7 @@ type server struct {
 }
 
 func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*pb.TransactionResponse, error) {
+	ctx.Deadline()
 	msg, err := fmt.Printf("UserID: %s\nUser Email: %s\nCurrency: %s\nAmount: %d.%d\n",
 		strconv.Itoa(int(in.GetUserID())),
 		in.GetUserEmail(),
@@ -35,7 +37,7 @@ func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*p
 	log.Println(msg)
 	//str := strconv.Itoa(msg)
 	log.Println("Doing some work")
-	//time.Sleep(time.Second * 1)
+	time.Sleep(time.Second * 8)
 	log.Println("Some work is done")
 	//return &pb.TransactionResponse{Message: "Received request " + str}, nil
 	return &pb.TransactionResponse{Message: "Hello " + in.GetUserEmail() + strconv.Itoa(int(in.GetAmount().Units))}, nil
