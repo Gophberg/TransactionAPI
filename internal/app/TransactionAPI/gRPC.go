@@ -29,5 +29,5 @@ func gRPCTransactionRequest(ctx context.Context, t Transaction) {
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Received response from External Pay System: %s", r.GetMessage())
+	log.Printf("Received response from External Pay System: %t", r.GetStatus())
 }

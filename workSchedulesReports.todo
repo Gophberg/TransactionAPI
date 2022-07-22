@@ -71,9 +71,10 @@ Tasks that appeared during the work:
   ☐ chosing the type of currency
 
 22-07-200:
-  ☐ lead extPaySys request to the appropriate view
+  ✔ lead extPaySys request to the appropriate view @done (22-07-22 12:35)
+  ☐ refactor EPS request. Write to DB record depending of EPS response
   ☐ push contexts to DB CRUDs
   ☐ begin write tests
 Tasks that appeared during the work:
-  ☐ chosing the type of currency
+  ✔ chosing the type of currency @done (22-07-22 12:35)
 

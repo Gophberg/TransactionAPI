@@ -17,5 +17,5 @@ message TransactionRequest {
 }
 
 message TransactionResponse {
-  string message = 1;
+  bool status = 1;
 }

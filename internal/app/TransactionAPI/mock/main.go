@@ -35,22 +35,22 @@ func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*p
 	log.Println("Processing transaction...")
 	status := doTransaction(in)
 	log.Println("Transaction complete with status", status)
-	return &pb.TransactionResponse{Message: status}, nil
+	return &pb.TransactionResponse{Status: status}, nil
 }
 
-func doTransaction(in *pb.TransactionRequest) string {
+func doTransaction(in *pb.TransactionRequest) bool {
 	amount := decimal.NewFromFloat(in.Amount)
 	log.Println("Received funds", amount)
 	time.Sleep(time.Second * 5) // processing transaction
 	if in.UserEmail == "joe@mail.edu" {
 		log.Println("I hate him")
-		return "canceled"
+		return false
 	}
 	if in.Amount <= 0 {
 		log.Println("Low amount")
-		return "canceled"
+		return false
 	}
-	return "success"
+	return true
 }
 
 func main() {
