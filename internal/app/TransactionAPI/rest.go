@@ -1,10 +1,12 @@
 package TransactionAPI
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"mime"
 	"net/http"
+	"time"
 )
 
 func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +46,12 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Printf("%v bytes written to ResponseWriter", write)
+
+	// Go gRPC transaction request
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	gRPCTransactionRequest(ctx, t)
+
 }
 
 func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Request) {

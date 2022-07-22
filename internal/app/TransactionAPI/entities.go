@@ -19,8 +19,8 @@ type User struct {
 }
 
 type Transaction struct {
-	Id           int             `json:"id"`
-	UserID       int             `json:"userid"`
+	Id           int64           `json:"id"`
+	UserID       int64           `json:"userid"`
 	UserEmail    string          `json:"useremail"`
 	Amount       decimal.Decimal `json:"amount"`
 	Currency     string          `json:"currency"`

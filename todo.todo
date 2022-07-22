@@ -5,8 +5,9 @@
        ✔ get status by user id @done (22-06-22 21:23)
        ✔ get all transactions by user id @done (22-06-22 21:23)
        ✔ get all transactions by user email @done (22-06-22 23:22)
-       ☐ lead extPaySys request to the appropriate view
        ☐ cancel transaction
+       ☐ lead extPaySys request to the appropriate view
+       ☐ push contexts to DB CRUDs
      ☐ tests
    ☐ DB side
      ☐ CRUDs

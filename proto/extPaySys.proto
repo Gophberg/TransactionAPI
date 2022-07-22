@@ -8,19 +8,13 @@ service Transaction {
   rpc Transaction (TransactionRequest) returns (TransactionResponse) {}
 }
 
-
 message TransactionRequest {
   int64 ID = 1;
   int64 UserID = 2;
   string UserEmail = 3;
   string Currency = 4;
-  message Amount {
-    int64 Units = 5;
-    int32 Nanos = 6;
-  }
-  Amount amount = 7;
+  double Amount = 5;
 }
-
 
 message TransactionResponse {
   string message = 1;

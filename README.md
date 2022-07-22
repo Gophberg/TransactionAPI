@@ -20,5 +20,5 @@ To get all transactions by UserEmail, do request
 Note: In this point my db contains the two records. `joe@mail.edu` and `jane@mail.edu`
   
 To create transaction, do request  
-`curl -X POST http://localhost:9000/createTransaction -H "Content-Type: application/json" --data '{"userid": 100, "useremail": "maks@mail.edu", "amount": 333.11, "currency": "usd", "datecreated": "2022-07-02T13:57:00Z", "dateupdated": "2022-07-02T13:57:02Z", "status": "Canceled"}'`  
+`curl -X POST http://localhost:9000/createTransaction -H "Content-Type: application/json" --data '{"userid": 100, "useremail": "maks@mail.edu", "amount": 333.11, "currency": "usd", "datecreated": "2022-07-02T13:57:00Z", "dateupdated": "2022-07-02T13:57:02Z"}'`  
 You can to post your credentials in this request

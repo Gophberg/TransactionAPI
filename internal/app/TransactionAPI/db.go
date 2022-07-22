@@ -16,7 +16,7 @@ func ConnDB() (*sql.DB, error) {
 	return db, err
 }
 
-func (t *Transaction) CreateTransaction(c Transaction) (int, error) {
+func (t *Transaction) CreateTransaction(c Transaction) (int64, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return 0, err

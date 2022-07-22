@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	pb "github.com/Gophberg/TransactionAPI/internal/app/TransactionAPI/pb"
+	"github.com/shopspring/decimal"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -24,12 +25,11 @@ type server struct {
 
 func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*pb.TransactionResponse, error) {
 	ctx.Deadline()
-	msg := fmt.Sprintf("UserID: %s\nUser Email: %s\nCurrency: %s\nAmount: %d.%d\n",
+	msg := fmt.Sprintf("UserID: %s\nUser Email: %s\nCurrency: %s\nAmount: %v\n",
 		strconv.Itoa(int(in.GetUserID())),
 		in.GetUserEmail(),
 		in.GetCurrency(),
-		in.GetAmount().Units,
-		in.GetAmount().Nanos,
+		in.GetAmount(),
 	)
 	log.Printf("Received transaction data:\n%v\n", msg)
 	log.Println("Processing transaction...")
@@ -39,9 +39,15 @@ func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*p
 }
 
 func doTransaction(in *pb.TransactionRequest) string {
-	time.Sleep(time.Second * 5) // searching funds in account :)
+	amount := decimal.NewFromFloat(in.Amount)
+	log.Println("Received funds", amount)
+	time.Sleep(time.Second * 5) // processing transaction
 	if in.UserEmail == "joe@mail.edu" {
 		log.Println("I hate him")
+		return "canceled"
+	}
+	if in.Amount <= 0 {
+		log.Println("Low amount")
 		return "canceled"
 	}
 	return "success"
