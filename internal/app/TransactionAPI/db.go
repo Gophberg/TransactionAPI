@@ -28,7 +28,7 @@ func (t *Transaction) CreateTransaction(c Transaction) (int64, error) {
 		}
 	}(db)
 
-	log.Printf("Reseived Credentials: %v", c)
+	log.Printf("[DB] Reseived Credentials: %v", c)
 
 	err = db.QueryRow(
 		`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) 
@@ -56,7 +56,7 @@ func (t Transaction) GetTransactionStatusById(c Transaction) (string, error) {
 		}
 	}(db)
 
-	log.Printf("Query request <%v> status\n", c.Id)
+	log.Printf("[DB] Query request <%v> status\n", c.Id)
 
 	query := fmt.Sprintf(`SELECT status FROM transactions WHERE id = %d;`, c.Id)
 	if err := db.QueryRow(query).Scan(&t.Status); err != nil {
@@ -64,7 +64,7 @@ func (t Transaction) GetTransactionStatusById(c Transaction) (string, error) {
 			return "", err
 		}
 	}
-	fmt.Printf("Status is <%v>\n", t.Status)
+	log.Printf("[DB] Status is <%v>\n", t.Status)
 	return t.Status, nil
 }
 
@@ -120,7 +120,7 @@ func (t Transaction) GetAllTransactionsByUserEmail(c Transaction) ([]Transaction
 		}
 	}(db)
 
-	fmt.Printf("Requested query email: %v\n", c.UserEmail)
+	log.Printf("[DB] Requested query email: %v\n", c.UserEmail)
 	query := fmt.Sprintf(`SELECT * FROM transactions WHERE useremail = '%v';`, c.UserEmail)
 
 	var items []Transaction

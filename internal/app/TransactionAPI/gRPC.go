@@ -13,7 +13,7 @@ func gRPCTransactionRequest(ctx context.Context, t Transaction) {
 	flag.Parse()
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("[gRPC] did not connect: %v", err)
 	}
 	defer conn.Close()
 	c := pb.NewTransactionClient(conn)
@@ -27,7 +27,7 @@ func gRPCTransactionRequest(ctx context.Context, t Transaction) {
 		Amount:    amount,
 	})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("[gRPC] could not transact: %v", err)
 	}
-	log.Printf("Received response from External Pay System: %t", r.GetStatus())
+	log.Printf("[gRPC] Received response from External Pay System: %t", r.GetStatus())
 }

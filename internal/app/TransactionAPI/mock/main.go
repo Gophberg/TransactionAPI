@@ -31,39 +31,39 @@ func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*p
 		in.GetCurrency(),
 		in.GetAmount(),
 	)
-	log.Printf("Received transaction data:\n%v\n", msg)
-	log.Println("Processing transaction...")
+	log.Printf("[EPS] Received transaction data:\n%v\n", msg)
+	log.Println("[EPS] Processing transaction...")
 	status := doTransaction(in)
-	log.Println("Transaction complete with status", status)
+	log.Println("[EPS] Transaction complete with status", status)
 	return &pb.TransactionResponse{Status: status}, nil
 }
 
-func doTransaction(in *pb.TransactionRequest) bool {
+func doTransaction(in *pb.TransactionRequest) (bool, string) {
 	amount := decimal.NewFromFloat(in.Amount)
-	log.Println("Received funds", amount)
+	log.Println("[EPS] Received funds", amount)
 	time.Sleep(time.Second * 5) // processing transaction
 	if in.UserEmail == "joe@mail.edu" {
-		log.Println("I hate him")
-		return false
+		log.Println("[EPS] I hate him")
+		return false, "User is bad"
 	}
 	if in.Amount <= 0 {
-		log.Println("Low amount")
-		return false
+		log.Println("[EPS] Low amount")
+		return false, "Low amount"
 	}
-	return true
+	return true, "Success"
 }
 
 func main() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("[EPS] failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
 	reflection.Register(s)
 	pb.RegisterTransactionServer(s, &server{})
-	log.Printf("server listening at %v", lis.Addr())
+	log.Printf("[EPS] server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		log.Fatalf("[EPS] failed to serve: %v", err)
 	}
 }
