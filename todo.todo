@@ -6,7 +6,7 @@
        ✔ get all transactions by user id @done (22-06-22 21:23)
        ✔ get all transactions by user email @done (22-06-22 23:22)
        ☐ cancel transaction
-       ☐ lead extPaySys request to the appropriate view
+       ✔ lead extPaySys request to the appropriate view @done (22-07-27 19:05)
        ☐ push contexts to DB CRUDs
      ☐ tests
    ☐ DB side
