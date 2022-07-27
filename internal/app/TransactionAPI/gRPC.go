@@ -15,7 +15,12 @@ func gRPCTransactionRequest(ctx context.Context, t Transaction) {
 	if err != nil {
 		log.Fatalf("[gRPC] did not connect: %v", err)
 	}
-	defer conn.Close()
+	defer func(conn *grpc.ClientConn) {
+		err := conn.Close()
+		if err != nil {
+			log.Printf("[gRPC] connection error: %v", err)
+		}
+	}(conn)
 	c := pb.NewTransactionClient(conn)
 
 	amount, _ := t.Amount.Float64()
@@ -29,5 +34,21 @@ func gRPCTransactionRequest(ctx context.Context, t Transaction) {
 	if err != nil {
 		log.Fatalf("[gRPC] could not transact: %v", err)
 	}
-	log.Printf("[gRPC] Received response from External Pay System: %t", r.GetStatus())
+	log.Printf("[gRPC] Response from EPS. Status '%t', reason '%s'", r.GetStatus(), r.GetReason())
+
+	// Create DB record with status what returned by EPS
+	t.Status = convertStatus(r.GetStatus())
+	id, err := t.CreateTransaction(t)
+	if err != nil {
+		log.Println("[gRPC]", err)
+	}
+	log.Println("[gRPC] New transaction created with id:", id)
+
+}
+
+func convertStatus(s bool) string {
+	if s == true {
+		return "Success"
+	}
+	return "Fail"
 }

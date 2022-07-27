@@ -18,4 +18,5 @@ message TransactionRequest {
 
 message TransactionResponse {
   bool status = 1;
+  string reason = 2;
 }

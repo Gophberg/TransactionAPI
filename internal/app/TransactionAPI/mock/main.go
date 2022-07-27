@@ -33,9 +33,12 @@ func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*p
 	)
 	log.Printf("[EPS] Received transaction data:\n%v\n", msg)
 	log.Println("[EPS] Processing transaction...")
-	status := doTransaction(in)
-	log.Println("[EPS] Transaction complete with status", status)
-	return &pb.TransactionResponse{Status: status}, nil
+	status, reason := doTransaction(in)
+	log.Printf("[EPS] Transaction complete with status: '%t', by reason '%s'", status, reason)
+	return &pb.TransactionResponse{
+		Status: status,
+		Reason: reason,
+	}, nil
 }
 
 func doTransaction(in *pb.TransactionRequest) (bool, string) {
