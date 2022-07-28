@@ -17,7 +17,7 @@ func ConnDB() (*sql.DB, error) {
 	return db, err
 }
 
-func (t *Transaction) CreateTransaction(c Transaction) (int64, error) {
+func (t *Transaction) createRecord(c Transaction) (int64, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return 0, err
@@ -32,7 +32,7 @@ func (t *Transaction) CreateTransaction(c Transaction) (int64, error) {
 	log.Printf("[DB] Reseived Credentials: %v", c)
 
 	c.CreationDate = time.Now().Format(time.RFC3339)
-	c.UpdateDate = c.CreationDate
+	c.UpdateDate = ""
 
 	err = db.QueryRow(
 		`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) 
@@ -48,7 +48,7 @@ func (t *Transaction) CreateTransaction(c Transaction) (int64, error) {
 	return t.Id, err
 }
 
-func (t Transaction) GetTransactionStatusById(c Transaction) (string, error) {
+func (t Transaction) readRecord(c Transaction) (string, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return "", err
@@ -72,7 +72,7 @@ func (t Transaction) GetTransactionStatusById(c Transaction) (string, error) {
 	return t.Status, nil
 }
 
-func (t Transaction) GetAllTransactionsByUserId(c Transaction) ([]Transaction, error) {
+func (t Transaction) readRecords(c Transaction, urlPath string) ([]Transaction, error) {
 	db, err := ConnDB()
 	if err != nil {
 		return nil, err
@@ -86,69 +86,55 @@ func (t Transaction) GetAllTransactionsByUserId(c Transaction) ([]Transaction, e
 
 	var items []Transaction
 
-	query := fmt.Sprintf(`SELECT * FROM transactions WHERE userid = %d;`, c.UserID)
+	switch {
+	//case urlPath == "/getTransactionStatusById":
 
-	rows, err := db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-
-	for rows.Next() {
-		var i Transaction
-		if err := rows.Scan(
-			&i.Id,
-			&i.UserID,
-			&i.UserEmail,
-			&i.Amount,
-			&i.Currency,
-			&i.CreationDate,
-			&i.UpdateDate,
-			&i.Status,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	return items, nil
-}
-
-func (t Transaction) GetAllTransactionsByUserEmail(c Transaction) ([]Transaction, error) {
-	db, err := ConnDB()
-	if err != nil {
-		return nil, err
-	}
-	defer func(db *sql.DB) {
-		err := db.Close()
+	case urlPath == "/getAllTransactionsByUserId":
+		query := fmt.Sprintf(`SELECT * FROM transactions WHERE userid = %d;`, c.UserID)
+		rows, err := db.Query(query)
 		if err != nil {
-
-		}
-	}(db)
-
-	log.Printf("[DB] Requested query email: %v\n", c.UserEmail)
-	query := fmt.Sprintf(`SELECT * FROM transactions WHERE useremail = '%v';`, c.UserEmail)
-
-	var items []Transaction
-
-	rows, err := db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-
-	for rows.Next() {
-		var i Transaction
-		if err := rows.Scan(
-			&i.Id,
-			&i.UserID,
-			&i.UserEmail,
-			&i.Amount,
-			&i.Currency,
-			&i.CreationDate,
-			&i.UpdateDate,
-			&i.Status,
-		); err != nil {
 			return nil, err
 		}
-		items = append(items, i)
+		for rows.Next() {
+			var i Transaction
+			if err := rows.Scan(
+				&i.Id,
+				&i.UserID,
+				&i.UserEmail,
+				&i.Amount,
+				&i.Currency,
+				&i.CreationDate,
+				&i.UpdateDate,
+				&i.Status,
+			); err != nil {
+				return nil, err
+			}
+			items = append(items, i)
+		}
+		return items, nil
+	case urlPath == "/getAllTransactionsByUserEmail":
+		query := fmt.Sprintf(`SELECT * FROM transactions WHERE useremail = '%v';`, c.UserEmail)
+		rows, err := db.Query(query)
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
+			var i Transaction
+			if err := rows.Scan(
+				&i.Id,
+				&i.UserID,
+				&i.UserEmail,
+				&i.Amount,
+				&i.Currency,
+				&i.CreationDate,
+				&i.UpdateDate,
+				&i.Status,
+			); err != nil {
+				return nil, err
+			}
+			items = append(items, i)
+		}
+		return items, nil
 	}
-	return items, nil
+	return nil, nil
 }

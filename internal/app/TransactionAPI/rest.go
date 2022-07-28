@@ -17,7 +17,7 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 
 	// Create new record of transaction in database with status "New"
 	t.Status = "New"
-	id, err := t.CreateTransaction(t)
+	id, err := t.createRecord(t)
 	if err != nil {
 		log.Println("[REST]", err)
 	}
@@ -44,7 +44,7 @@ func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Req
 
 	t.decodeData(w, r)
 
-	status, err := t.GetTransactionStatusById(t)
+	status, err := t.readRecord(t)
 	if err != nil {
 		log.Println("[REST]", err)
 	}
@@ -62,35 +62,12 @@ func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Req
 	log.Printf("[REST] %v bytes written to ResponseWriter", write)
 }
 
-func (t Transaction) getAllTransactionsByUserId(w http.ResponseWriter, r *http.Request) {
+func (t Transaction) getAllTransactions(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[REST] Requested all transactions status by UserId: %s\n", r.URL.Path)
 
 	t.decodeData(w, r)
 
-	transactions, err := t.GetAllTransactionsByUserId(t)
-	if err != nil {
-		log.Println("[REST]", err)
-	}
-
-	js, err := json.Marshal(transactions)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	write, err := w.Write(js)
-	if err != nil {
-		return
-	}
-	log.Printf("[REST] %v bytes written to ResponseWriter", write)
-}
-
-func (t Transaction) getAllTransactionsByUserEmail(w http.ResponseWriter, r *http.Request) {
-	log.Printf("[REST] Requested all transactions status by UserEmail: %s\n", r.URL.Path)
-
-	t.decodeData(w, r)
-
-	transactions, err := t.GetAllTransactionsByUserEmail(t)
+	transactions, err := t.readRecords(t, r.URL.Path)
 	if err != nil {
 		log.Println("[REST]", err)
 	}

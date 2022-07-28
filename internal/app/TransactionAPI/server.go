@@ -20,8 +20,8 @@ func Start() error {
 	config.NewConfig()
 	t := Transaction{}
 	http.HandleFunc("/getTransactionStatusById", t.getTransactionStatusById)
-	http.HandleFunc("/getAllTransactionsByUserId", t.getAllTransactionsByUserId)
-	http.HandleFunc("/getAllTransactionsByUserEmail", t.getAllTransactionsByUserEmail)
+	http.HandleFunc("/getAllTransactionsByUserId", t.getAllTransactions)
+	http.HandleFunc("/getAllTransactionsByUserEmail", t.getAllTransactions)
 	http.HandleFunc("/createTransaction", t.createTransaction)
 	return http.ListenAndServe(":9000", nil)
 }
