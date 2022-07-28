@@ -77,7 +77,14 @@ Tasks that appeared during the work:
   ✔ chosing the type of currency @done (22-07-22 12:35)
 
 27-07-200:
+  ✔ refactor EPS request. Write to DB record depending of EPS response @done (22-07-27 19:06)
   ☐ push contexts to DB CRUDs
   ☐ begin write tests
 Tasks that appeared during the work:
   ✔ DRY. Move repeatable in CRUDs code to divison function @done (22-07-27 19:09)
+
+28-07-200:
+  ☐ push contexts to DB CRUDs
+  ☐ begin write tests
+Tasks that appeared during the work:
+

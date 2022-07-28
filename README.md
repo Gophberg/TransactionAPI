@@ -7,20 +7,20 @@ Execute:
 - `make eps` to run mock of external pay system (EPS)
 - `make` to run main server
 ---
-To get status of transaction by id, do request  
+To __get status__ of transaction __by id__, do request  
 `curl -X POST http://localhost:9000/getTransactionStatusById -H "Content-Type: application/json" --data '{"id": N}'`
-Where `N` is a number of transaction to check.  
+Where `N` is a number of transaction ID to check.  
   
-To get all transactions by UserId, do request  
+To __get all transactions by UserId__, do request  
 `curl -X POST http://localhost:9000/getAllTransactionsByUserId -H "Content-Type: application/json" --data '{"userid": N}'`  
-Where `N` is a number of transactions to check.  
+Where `N` is a number of UserID to check.  
   
-To get all transactions by UserEmail, do request  
+To __get all transactions by UserEmail__, do request  
 `curl -X POST http://localhost:9000/getAllTransactionsByUserEmail -H "Content-Type: application/json" --data '{"useremail": "joe@mail.edu"}'`  
 Note: In this point my db contains the two records. `joe@mail.edu` and `jane@mail.edu`
   
-To create transaction, do request  
-`curl -X POST http://localhost:9000/createTransaction -H "Content-Type: application/json" --data '{"userid": 100, "useremail": "maks@mail.edu", "amount": 333.11, "currency": "usd", "datecreated": "2022-07-02T13:57:00Z", "dateupdated": "2022-07-02T13:57:02Z"}'`  
+To __create transaction__, do request  
+`curl -X POST http://localhost:9000/createTransaction -H "Content-Type: application/json" --data '{"userid": 100, "useremail": "maks@mail.edu", "amount": 333.11, "currency": "usd"}'`  
 You can to post your credentials in this request
 If you try to create transaction with UserEmail "joe@mail.edu". 
 EPS will return "Fail" with reason "I hate him" (:smile:) 

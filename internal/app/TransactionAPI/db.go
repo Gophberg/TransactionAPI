@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"log"
+	"time"
 )
 
 func ConnDB() (*sql.DB, error) {
@@ -29,6 +30,9 @@ func (t *Transaction) CreateTransaction(c Transaction) (int64, error) {
 	}(db)
 
 	log.Printf("[DB] Reseived Credentials: %v", c)
+
+	c.CreationDate = time.Now().Format(time.RFC3339)
+	c.UpdateDate = c.CreationDate
 
 	err = db.QueryRow(
 		`INSERT INTO transactions (userid, useremail, amount, currency, creationdate, updatedate, status) 
