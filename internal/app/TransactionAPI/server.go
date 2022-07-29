@@ -23,5 +23,6 @@ func Start() error {
 	http.HandleFunc("/getAllTransactionsByUserId", t.getAllTransactions)
 	http.HandleFunc("/getAllTransactionsByUserEmail", t.getAllTransactions)
 	http.HandleFunc("/createTransaction", t.createTransaction)
+	http.HandleFunc("/cancelTransaction", t.cancelTransaction)
 	return http.ListenAndServe(":9000", nil)
 }

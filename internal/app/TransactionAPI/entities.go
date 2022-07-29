@@ -13,11 +13,6 @@ type Config struct {
 	Dockerdbport string `yaml:"dockerdbport"`
 }
 
-type User struct {
-	Id    int    `json:"id"`
-	Email string `json:"email"`
-}
-
 type Transaction struct {
 	Id           int64           `json:"id"`
 	UserID       int64           `json:"userid"`
@@ -27,6 +22,7 @@ type Transaction struct {
 	CreationDate string          `json:"datecreated"`
 	UpdateDate   string          `json:"dateupdated"`
 	Status       string          `json:"status"`
+	CancelTrChan chan int64
 }
 
 type Status struct {

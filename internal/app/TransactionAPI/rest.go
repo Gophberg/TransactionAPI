@@ -24,8 +24,12 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 	log.Println("[REST] New transaction created with id:", id)
 
 	// Sending response
+	js, err := json.Marshal("Ok")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 	w.Header().Set("Content-Type", "application/json")
-	write, err := w.Write([]byte("Ok"))
+	write, err := w.Write(js)
 	if err != nil {
 		return
 	}
@@ -34,6 +38,10 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 	// Go gRPC transaction request
 	go func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) // Modify time there and in mock/main.go/doTransaction if you need more time to testing of canceling transaction
+		received := <-t.CancelTrChan
+		if received == t.Id {
+			ctx.Done()
+		}
 		defer cancel()
 		gRPCTransactionRequest(ctx, t)
 	}()
@@ -52,7 +60,6 @@ func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Req
 	js, err := json.Marshal(status)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	write, err := w.Write(js)
@@ -62,8 +69,29 @@ func (t Transaction) getTransactionStatusById(w http.ResponseWriter, r *http.Req
 	log.Printf("[REST] %v bytes written to ResponseWriter", write)
 }
 
+func (t Transaction) cancelTransaction(w http.ResponseWriter, r *http.Request) {
+	log.Printf("[REST] Requested cancel transaction: %s\n", r.URL.Path)
+
+	t.decodeData(w, r)
+
+	// Sending cancel signal to a cancelChannel
+	t.CancelTrChan <- t.Id
+
+	// Do response
+	js, err := json.Marshal("Canceling...")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	write, err := w.Write(js)
+	if err != nil {
+		log.Println("[REST] write error:", err)
+	}
+	log.Printf("[REST] %v bytes written to ResponseWriter", write)
+}
+
 func (t Transaction) getAllTransactions(w http.ResponseWriter, r *http.Request) {
-	log.Printf("[REST] Requested all transactions status by UserId: %s\n", r.URL.Path)
+	log.Printf("[REST] Requested all transactions: %s\n", r.URL.Path)
 
 	t.decodeData(w, r)
 
