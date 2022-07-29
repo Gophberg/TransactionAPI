@@ -29,7 +29,7 @@ And in the `workSchedulesReports.todo` file I add the tasks for today and tasks 
 
 You can to post your credentials in this request.  
 If you try to create transaction with UserEmail `"joe@mail.edu"`.
-EPS will return `"Fail"` with reason `"I hate him"` (:smile:)   
+EPS will return `"Fail"` with reason `"I hate him"` :scream:  
 Or if you'll send zero or negative amount value.
 When EPS will return `"Fail"` with appropriate reason.    
 After requesting createTransaction,
