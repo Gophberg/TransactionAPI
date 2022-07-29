@@ -29,7 +29,7 @@ func (t *Transaction) createRecord(c Transaction) (int64, error) {
 		}
 	}(db)
 
-	log.Printf("[DB] Reseived Credentials: %v", c)
+	log.Printf("[DB] Reseived createRecord Credentials: %v", c)
 
 	c.CreationDate = time.Now().Format(time.RFC3339)
 	c.UpdateDate = ""
@@ -46,6 +46,30 @@ func (t *Transaction) createRecord(c Transaction) (int64, error) {
 		c.Status,
 	).Scan(&t.Id)
 	return t.Id, err
+}
+
+func (t *Transaction) updateRecord(c Transaction) (int64, error) {
+	db, err := ConnDB()
+	if err != nil {
+		return 0, err
+	}
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			return
+		}
+	}(db)
+
+	log.Printf("[DB] Reseived updateRecord Credentials: %v", c)
+
+	c.UpdateDate = time.Now().Format(time.RFC3339)
+
+	sqlStatements := `UPDATE transactions SET updatedate = $1, status = $2 WHERE id = $3;`
+	_, err = db.Exec(sqlStatements, c.UpdateDate, c.Status, c.Id)
+	if err != nil {
+		return 0, err
+	}
+	return 1, nil
 }
 
 func (t Transaction) readRecord(c Transaction) (string, error) {
