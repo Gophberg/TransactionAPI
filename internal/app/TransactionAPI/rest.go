@@ -33,7 +33,7 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 
 	// Go gRPC transaction request
 	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) // Modify time there and in mock/main.go/doTransaction if you need more time to testing of canceling transaction
 		defer cancel()
 		gRPCTransactionRequest(ctx, t)
 	}()

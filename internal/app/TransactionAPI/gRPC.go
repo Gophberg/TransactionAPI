@@ -38,12 +38,10 @@ func gRPCTransactionRequest(ctx context.Context, t Transaction) {
 
 	// Create DB record with status what returned by EPS
 	t.Status = convertStatus(r.GetStatus())
-	id, err := t.createRecord(t)
+	err = t.updateRecord(t)
 	if err != nil {
 		log.Println("[gRPC]", err)
 	}
-	log.Println("[gRPC] New transaction created with id:", id)
-
 }
 
 func convertStatus(s bool) string {

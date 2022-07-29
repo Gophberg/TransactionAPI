@@ -44,7 +44,9 @@ func (s *server) Transaction(ctx context.Context, in *pb.TransactionRequest) (*p
 func doTransaction(in *pb.TransactionRequest) (bool, string) {
 	amount := decimal.NewFromFloat(in.Amount)
 	log.Println("[EPS] Received funds", amount)
-	time.Sleep(time.Second * 5) // processing transaction
+	log.Println("[EPS] Starting do nothing")
+	time.Sleep(time.Second * 14) // processing transaction
+	log.Println("[EPS] Stopping do nothing")
 	if in.UserEmail == "joe@mail.edu" {
 		log.Println("[EPS] I hate him")
 		return false, "User is bad"
