@@ -14,9 +14,10 @@ And in the `workSchedulesReports.todo` file I add the tasks for today and tasks 
 ## How to use
 
 *Execute:*
-- `docker-compose up` to run postgres db
+- `docker-compose up` to run postgres db  
+Note: Database storage will create outside the docker container in the pgdata directory
 - `make gen` to generate gRPC code  
-    Note: This step is not required. Proto files is currently generated. But you can add some changes for tests.
+Note: This step is not required. Proto files is currently generated. But you can add some changes for tests.
 - `make eps` to run mock of external pay system (EPS)
 - `make` to run main server
  
