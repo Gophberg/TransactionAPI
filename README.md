@@ -15,7 +15,7 @@ And in the `workSchedulesReports.todo` file I add the tasks for today and tasks 
 
 *Execute:*
 - `docker-compose up` to run postgres db  
-Note: Database storage will create outside the docker container in the pgdata directory
+Note: Database storage will create outside the docker container in the `pgdata` directory
 - `make gen` to generate gRPC code  
 Note: This step is not required. Proto files is currently generated. But you can add some changes for tests.
 - `make eps` to run mock of external pay system (EPS)
@@ -35,7 +35,7 @@ Or if you'll send zero or negative amount value.
 When EPS will return `"Fail"` with appropriate reason.    
 After requesting createTransaction,
 API will create new record to database with status `"New"` and sending data to EPS.  
-Further EPS will return status and API do create new database record with appropriate reason.
+Further EPS will return status and API do update status in this record.
 
 ### Get status of transaction by ID
 
