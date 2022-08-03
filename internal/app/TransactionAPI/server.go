@@ -15,6 +15,7 @@ var (
 )
 
 var config Config
+var cancelTrChan = make(chan int64, 10)
 
 func Start() error {
 	config.NewConfig()

@@ -38,11 +38,14 @@ func (t Transaction) createTransaction(w http.ResponseWriter, r *http.Request) {
 	// Go gRPC transaction request
 	go func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) // Modify time there and in mock/main.go/doTransaction if you need more time to testing of canceling transaction
-		//received := <-t.CancelTrChan
-		//if received == t.Id {
-		//	ctx.Done()
-		//}
 		defer cancel()
+		go func() {
+			received := <-cancelTrChan
+			if received == t.Id {
+				log.Println("[REST] received from cancelTrChan", received, "t.Id", t.Id)
+				cancel()
+			}
+		}()
 		gRPCTransactionRequest(ctx, t)
 	}()
 }
@@ -75,7 +78,7 @@ func (t Transaction) cancelTransaction(w http.ResponseWriter, r *http.Request) {
 	t.decodeData(w, r)
 
 	// Sending cancel signal to a cancelChannel
-	t.CancelTrChan <- t.Id
+	cancelTrChan <- t.Id
 
 	// Do response
 	js, err := json.Marshal("Canceling...")

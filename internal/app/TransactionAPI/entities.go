@@ -22,7 +22,6 @@ type Transaction struct {
 	CreationDate string          `json:"datecreated"`
 	UpdateDate   string          `json:"dateupdated"`
 	Status       string          `json:"status"`
-	CancelTrChan chan int64
 }
 
 type Status struct {
